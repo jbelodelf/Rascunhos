@@ -1,0 +1,205 @@
+Installing the angular-cli Package
+
+The angular-cli package has become the standard way to create and manage Angular projects during
+development. In the original version of this book, I demonstrated how to set up an Angular project from
+scratch, which is a lengthy and error-prone process that is simplified by angular-cli. To install angularcli,
+
+open a new command prompt and run the following command:
+npm install --global @angular/cli@6.0.8
+
+Notice that there are two hyphens before the global argument. If you are using Linux or macOS, you
+may need to use sudo, like this:
+sudo npm install --global @angular/cli@6.0.8
+
+Installing Git
+The Git revision control tool is required to manage some of the packages required for Angular development.
+If you are using Windows or macOS, then download and run the installer from https://git-scm.com/
+downloads. (On macOS, you may have to change your security settings to open the installer, which has not
+been signed by the developers.)
+Git is already installed on most Linux distributions. If you want to install the latest version, then consult
+the installation instructions for your distribution at https://git-scm.com/download/linux. As an example,
+for Ubuntu, which is the Linux distribution I use, I used the following command:
+sudo apt-get install git
+
+git --version
+
+cd todo
+npm install bootstrap@4.1.1
+
+-----------------------------------------------------------------------
+
+To configure the Angular development tools to use the Bootstrap CSS file, add the entry shown in
+Listing 2-1 to the styles section of the angular.json file, which was added to the todo folder by the ng new
+command when the project was created.
+Listing 2-1. Configuring CSS in the angular.json File in the todo Folder
+...
+{
+"$schema": "./node_modules/@angular/cli/lib/config/schema.json",
+"version": 1,
+"newProjectRoot": "projects",
+"projects": {
+"todo": {
+"root": "",
+"sourceRoot": "src",
+"projectType": "application",
+"prefix": "app",
+"schematics": {},
+"architect": {
+"build": {
+"builder": "@angular-devkit/build-angular:browser",
+"options": {
+"outputPath": "dist/todo",
+"index": "src/index.html",
+"main": "src/main.ts",
+"polyfills": "src/polyfills.ts",
+"tsConfig": "src/tsconfig.app.json",
+"assets": [
+"src/favicon.ico",
+"src/assets"
+],
+"styles": [
+"src/styles.css",
+"node_modules/bootstrap/dist/css/bootstrap.min.css"
+],
+"scripts": []
+},
+...
+
+------------------------------------------------------------------
+ng serve --port 3000 --open
+------------------------------------------------------------------
+
+Listing 2-2. The Contents of the index.html File in the src Folder
+
+<!DOCTYPE html>
+<html>
+<head>
+<title>ToDo</title>
+<meta charset="utf-8" />
+</head>
+<body class="m-1 p-1">
+<h3 class="bg-primary text-white p-3">Adam's To Do List</h3>
+<div class="my-1">
+<input class="form-control" />
+<button class="btn btn-primary mt-1">Add</button>
+</div>
+<table class="table table-striped table-bordered">
+<thead>
+<tr>
+<th>Description</th>
+<th>Done</th>
+</tr>
+</thead>
+<tbody>
+<tr><td>Buy Flowers</td><td>No</td></tr>
+<tr><td>Get Shoes</td><td>No</td></tr>
+<tr><td>Collect Tickets</td><td>Yes</td></tr>
+<tr><td>Call Joe</td><td>No</td></tr>
+</tbody>
+</table>
+</body>
+</html>
+
+
+
+Listing 2-3. Preparing for Angular in the index.html File in the src Folder
+<!DOCTYPE html>
+<html>
+<head>
+<title>ToDo</title>
+<meta charset="utf-8" />
+</head>
+<body class="m-1">
+<todo-app>Angular placeholder</todo-app>
+</body>
+</html>
+
+
+
+Listing 2-4. The Contents of the model.ts File in the src/app Folder
+var model = {
+user: "Adam",
+items: [{ action: "Buy Flowers", done: false },
+{ action: "Get Shoes", done: false },
+{ action: "Collect Tickets", done: true },
+{ action: "Call Joe", done: false }]
+};
+
+
+
+Listing 2-5. Using ES6 Features in the model.ts File in the src/app Folder
+export class Model {
+user;
+items;
+constructor() {
+this.user = "Adam";
+this.items = [new TodoItem("Buy Flowers", false),
+new TodoItem("Get Shoes", false),
+new TodoItem("Collect Tickets", false),
+new TodoItem("Call Joe", false)]
+}
+}
+export class TodoItem {
+action;
+done;
+constructor(action, done) {
+this.action = action;
+this.done = done;
+}
+}
+
+
+
+
+Listing 2-7. The Contents of the app.component.ts File in the src/app Folder
+import { Component } from "@angular/core";
+import { Model } from "./model";
+@Component({
+selector: "todo-app",
+templateUrl: "app.component.html"
+})
+export class AppComponent {
+model = new Model();
+getName() {
+return this.model.user;
+}
+}
+
+
+
+Listing 2-9. Enabling Forms Supports in the app.module.ts File in the src/app Folder
+import { BrowserModule } from '@angular/platform-browser';
+import { NgModule } from '@angular/core';
+import { FormsModule } from "@angular/forms";
+import { AppComponent } from './app.component';
+@NgModule({
+declarations: [AppComponent],
+imports: [BrowserModule, FormsModule],
+providers: [],
+bootstrap: [AppComponent]
+})
+export class AppModule { }
+
+
+
+
+Listing 2-10. The Contents of the main.ts File in the src Folder
+import { enableProdMode } from '@angular/core';
+import { platformBrowserDynamic } from '@angular/platform-browser-dynamic';
+import { AppModule } from './app/app.module';
+import { environment } from './environments/environment';
+if (environment.production) {
+enableProdMode();
+}
+platformBrowserDynamic().bootstrapModule(AppModule)
+.catch(err => console.log(err));
+
+
+
+
+
+
+
+
+
+
